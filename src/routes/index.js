@@ -2,6 +2,7 @@ const { Router } = require('express');
 const healthRoutes = require('./health.routes');
 const authProxy = require('./auth.proxy');
 const productProxy = require('./product.proxy');
+const userProxy = require('./user.proxy');
 const rolesRoutes = require('./roles.routes');
 
 const router = Router();
@@ -14,6 +15,9 @@ router.use(authProxy);
 
 // Roles — gateway-local, Principal only
 router.use('/api/roles', rolesRoutes);
+
+// User proxy — authenticated + authorized
+router.use(userProxy);
 
 // Product proxy — authenticated + authorized + country-scoped
 router.use(productProxy);

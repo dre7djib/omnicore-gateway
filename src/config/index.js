@@ -7,4 +7,5 @@ module.exports = {
   jwtSecret: process.env.JWT_SECRET,
   authServiceUrl: process.env.AUTH_SERVICE_URL || 'http://localhost:3003',
   productServiceUrl: process.env.PRODUCT_SERVICE_URL || 'http://localhost:3001',
+  userServiceUrl: process.env.USER_SERVICE_URL || 'http://localhost:3002',
 };
