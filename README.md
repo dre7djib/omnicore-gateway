@@ -4,7 +4,7 @@
 
 **Omnicore Gateway** is a secure, scalable API gateway with Role-Based Access Control (RBAC) for the Omnicore platform. It provides centralized authentication, authorization, routing, and security features for microservices architecture.
 
-## 🚀 Features
+## Features
 
 - **Authentication & Authorization**: JWT-based authentication with RBAC
 - **API Gateway**: Reverse proxy and routing to microservices
@@ -20,13 +20,13 @@
 - **Testing**: Unit tests with Jest
 - **CI/CD**: GitHub Actions pipeline
 
-## 📋 Prerequisites
+## Prerequisites
 
 - Node.js 20.x or higher
 - PostgreSQL 14.x or higher
 - npm or yarn
 
-## 🛠️ Installation
+## Installation
 
 1. **Clone the repository**
 ```bash
@@ -69,7 +69,7 @@ npm run seed:roles
 npm run bootstrap:principal
 ```
 
-## 🏃 Running the Application
+## Running the Application
 
 ### Development mode
 ```bash
@@ -83,7 +83,7 @@ npm start
 
 The server will start on `http://localhost:3000` (or the PORT specified in .env)
 
-## 🧪 Testing
+## Testing
 
 ```bash
 # Run all tests
@@ -96,7 +96,7 @@ npm run test:unit
 npm run test:watch
 ```
 
-## 🔍 Code Quality
+## Code Quality
 
 ```bash
 # Lint code
@@ -112,7 +112,7 @@ npm run security:audit
 npm run deps:check
 ```
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 omnicore-gateway/
@@ -141,7 +141,7 @@ omnicore-gateway/
 └── README.md
 ```
 
-## 🔐 API Documentation
+## API Documentation
 
 ### Health Check
 ```bash
@@ -158,7 +158,7 @@ POST /api/auth/refresh
 ### Protected Routes
 All routes require JWT authentication via `Authorization: Bearer <token>` header.
 
-## 🔧 Database Management
+## Database Management
 
 ```bash
 # Open Prisma Studio (GUI)
@@ -171,7 +171,7 @@ npm run prisma:migrate
 npx prisma migrate reset
 ```
 
-## 🚢 Deployment
+## Deployment
 
 ### Using Docker (recommended)
 ```bash
@@ -184,7 +184,7 @@ docker run -p 3000:3000 --env-file .env omnicore-gateway
 2. Run migrations: `npm run prisma:migrate`
 3. Start server: `npm start`
 
-## 🔄 CI/CD Pipeline
+## CI/CD Pipeline
 
 The project uses GitHub Actions for continuous integration:
 
@@ -197,7 +197,7 @@ Pipeline runs on:
 - Push to `dev` or `main` branches
 - Pull requests to `main`
 
-## 🤝 Contributing
+## Contributing
 
 1. Create a feature branch from `dev`
 ```bash
@@ -222,25 +222,25 @@ git push origin dev
    - Request code review
    - Merge when approved
 
-## 📝 Branch Strategy
+## Branch Strategy
 
 - `main`: Production-ready code
 - `dev`: Development branch (default)
 - `feature/*`: Feature branches
 
-## 📄 License
+## License
 
 ISC
 
-## 👥 Authors
+## Authors
 
 - **dre7djib** - [GitHub](https://github.com/dre7djib)
 
-## 🐛 Issues
+## Issues
 
 Report issues at: https://github.com/dre7djib/omnicore-gateway/issues
 
-## 📞 Support
+## Support
 
 For support and questions, please open an issue or contact the maintainers.
 
