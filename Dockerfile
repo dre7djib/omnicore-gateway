@@ -1,45 +1,54 @@
-# Build stage
+# ── Builder ───────────────────────────────────────────────────────────────────
 FROM node:22-alpine AS builder
 
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
-COPY prisma ./prisma/
-COPY prisma.config.ts ./
+# Root workspace metadata
+COPY package.json package-lock.json ./
 
-# Install dependencies
-RUN npm ci --only=production && \
-    npm cache clean --force
+# Workspace package.json files (required for npm ci to resolve the workspace graph)
+COPY omnicore-db/package.json      ./omnicore-db/package.json
+COPY omnicore-auth/package.json    ./omnicore-auth/package.json
+COPY omnicore-user/package.json    ./omnicore-user/package.json
+COPY omnicore-product/package.json ./omnicore-product/package.json
+COPY omnicore-gateway/package.json ./omnicore-gateway/package.json
+COPY omnicore-order/package.json   ./omnicore-order/package.json
 
-# Generate Prisma Client
-RUN npx prisma generate
+# Shared DB package — contains schema + migrations + Prisma client source
+COPY omnicore-db/ ./omnicore-db/
 
-# Production stage
+# Install all deps (devDeps included so prisma CLI is available for generate)
+RUN npm ci && npm cache clean --force
+
+# Generate Prisma client into root node_modules/@prisma/client
+RUN cd omnicore-db && npx prisma generate
+
+# Prune devDependencies for a lean production image
+RUN npm prune --omit=dev
+
+# ── Runner ────────────────────────────────────────────────────────────────────
 FROM node:22-alpine
 
 WORKDIR /app
 
-# Create non-root user
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nodejs -u 1001
+RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
 
-# Copy dependencies from builder
+# Pruned node_modules (workspace symlinks resolved to real directories by Docker COPY)
 COPY --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
-COPY --from=builder --chown=nodejs:nodejs /app/prisma ./prisma
 
-# Copy application code
-COPY --chown=nodejs:nodejs . .
+# Shared DB package (needed to resolve node_modules/@omnicore/db symlink → ../../omnicore-db)
+COPY --chown=nodejs:nodejs omnicore-db/ ./omnicore-db/
 
-# Switch to non-root user
+# Service source code
+COPY --chown=nodejs:nodejs omnicore-gateway/ ./omnicore-gateway/
+
 USER nodejs
 
-# Expose port
+WORKDIR /app/omnicore-gateway
+
 EXPOSE 3000
 
-# Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
   CMD node -e "require('http').get('http://localhost:3000/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
 
-# Start application
 CMD ["npm", "start"]

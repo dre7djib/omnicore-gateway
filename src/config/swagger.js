@@ -182,6 +182,32 @@ const options = {
             updatedAt:   { type: 'string', format: 'date-time' },
           },
         },
+        // ── Orders ────────────────────────────────────────────────────────
+        Order: {
+          type: 'object',
+          properties: {
+            id:          { type: 'string', format: 'uuid' },
+            userId:      { type: 'string', format: 'uuid' },
+            countryId:   { type: 'string', format: 'uuid' },
+            status:      { type: 'string', enum: ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled'] },
+            totalAmount: { type: 'number', format: 'float', example: 59.98 },
+            currency:    { type: 'string', example: 'EUR' },
+            items:       { type: 'array', items: { $ref: '#/components/schemas/OrderItem' } },
+            createdAt:   { type: 'string', format: 'date-time' },
+            updatedAt:   { type: 'string', format: 'date-time' },
+          },
+        },
+        OrderItem: {
+          type: 'object',
+          properties: {
+            id:               { type: 'string', format: 'uuid' },
+            orderId:          { type: 'string', format: 'uuid' },
+            countryProductId: { type: 'string', format: 'uuid' },
+            quantity:         { type: 'integer', example: 2 },
+            unitPrice:        { type: 'number', format: 'float', example: 29.99 },
+            currency:         { type: 'string', example: 'EUR' },
+          },
+        },
         // ── Common ────────────────────────────────────────────────────────
         Error: {
           type: 'object',

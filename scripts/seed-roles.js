@@ -1,22 +1,20 @@
 #!/usr/bin/env node
 /**
  * Seed the 3 core roles: Principal, Tenant, User.
- * Safe to run multiple times (upsert by name).
+ * Safe to run multiple times (checks before inserting).
  *
  * Usage: node scripts/seed-roles.js
  */
 require('dotenv').config();
 
-const { PrismaClient } = require('@prisma/client');
-const { PrismaPg } = require('@prisma/adapter-pg');
+const { getPrisma } = require('@omnicore/db');
 
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-const prisma = new PrismaClient({ adapter });
+const prisma = getPrisma();
 
 const ROLES = [
   { name: 'Principal', description: 'Global admin — full CRUD, can assign/revoke roles' },
-  { name: 'Tenant', description: 'Country-scoped admin — manages products/stock for their country' },
-  { name: 'User', description: 'Read-only — browse products, countries, stock' },
+  { name: 'Tenant',    description: 'Country-scoped admin — manages products/stock for their country' },
+  { name: 'User',      description: 'Read-only — browse products, countries, stock' },
 ];
 
 async function main() {
@@ -27,12 +25,7 @@ async function main() {
     if (existing) {
       console.log(`  Role "${role.name}" already exists (${existing.id})`);
     } else {
-      const created = await prisma.role.create({
-        data: {
-          name: role.name,
-          description: role.description,
-        },
-      });
+      const created = await prisma.role.create({ data: role });
       console.log(`  Created role "${created.name}" (${created.id})`);
     }
   }

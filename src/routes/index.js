@@ -4,6 +4,7 @@ const authProxy = require('./auth.proxy');
 const productProxy = require('./product.proxy');
 const userProxy = require('./user.proxy');
 const rolesRoutes = require('./roles.routes');
+const orderProxy = require('./order.proxy');
 
 const router = Router();
 
@@ -21,5 +22,8 @@ router.use(userProxy);
 
 // Product proxy — authenticated + authorized + country-scoped
 router.use(productProxy);
+
+// Order proxy — authenticated + authorized
+router.use(orderProxy);
 
 module.exports = router;

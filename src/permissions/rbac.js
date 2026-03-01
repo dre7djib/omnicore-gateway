@@ -73,6 +73,12 @@ const permissions = [
   { method: 'GET',    pattern: /^\/api\/roles\/users\/[^/]+$/,    roles: ['Principal'],                 countryScoped: false },
   { method: 'POST',   pattern: /^\/api\/roles\/assign\/?$/,       roles: ['Principal'],                 countryScoped: false },
   { method: 'POST',   pattern: /^\/api\/roles\/revoke\/?$/,       roles: ['Principal'],                 countryScoped: false },
+
+  // ── Orders ─────────────────────────────────────────────────
+  { method: 'POST',   pattern: /^\/api\/orders\/?$/,                roles: ['Principal', 'Tenant', 'User'], countryScoped: false },
+  { method: 'GET',    pattern: /^\/api\/orders(\/.*)?$/,            roles: ['Principal', 'Tenant', 'User'], countryScoped: false },
+  { method: 'PATCH',  pattern: /^\/api\/orders\/[^/]+\/status$/,    roles: ['Principal', 'Tenant'],         countryScoped: false },
+  { method: 'DELETE', pattern: /^\/api\/orders\/[^/]+$/,            roles: ['Principal', 'Tenant', 'User'], countryScoped: false },
 ];
 
 const findPermission = (method, path) => {

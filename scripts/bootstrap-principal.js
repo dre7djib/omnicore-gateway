@@ -5,18 +5,16 @@
  *
  * Prerequisites:
  *   1. User must have already signed up via /auth/signup
- *   2. Roles must be seeded: npm run seed:roles
+ *   2. Roles must be seeded (the omnicore-db container does this automatically)
  *
  * Usage: node scripts/bootstrap-principal.js <email>
  * Example: node scripts/bootstrap-principal.js admin@example.com
  */
 require('dotenv').config();
 
-const { PrismaClient } = require('@prisma/client');
-const { PrismaPg } = require('@prisma/adapter-pg');
+const { getPrisma } = require('@omnicore/db');
 
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-const prisma = new PrismaClient({ adapter });
+const prisma = getPrisma();
 
 async function main() {
   const email = process.argv[2];
@@ -29,7 +27,7 @@ async function main() {
   // Find the Principal role
   const principalRole = await prisma.role.findFirst({ where: { name: 'Principal' } });
   if (!principalRole) {
-    console.error('Principal role not found. Run `npm run seed:roles` first.');
+    console.error('Principal role not found. Run the omnicore-db seed first.');
     process.exit(1);
   }
 

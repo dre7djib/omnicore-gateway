@@ -1,12 +1,8 @@
-const { PrismaClient } = require('@prisma/client');
-const { PrismaPg } = require('@prisma/adapter-pg');
+const { getPrisma, disconnectDB } = require('@omnicore/db');
 const { logger } = require('./logger');
 
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-const prisma = new PrismaClient({
-  adapter,
-  log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-});
+// getPrisma() is safe here: server.js calls require('dotenv').config() before this module loads.
+const prisma = getPrisma();
 
 const connectDB = async () => {
   try {
@@ -16,10 +12,6 @@ const connectDB = async () => {
     logger.error({ err: error }, 'Database connection failed');
     process.exit(1);
   }
-};
-
-const disconnectDB = async () => {
-  await prisma.$disconnect();
 };
 
 module.exports = { prisma, connectDB, disconnectDB };
