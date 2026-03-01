@@ -80,15 +80,24 @@ const proxyForward = (req, res, next) => {
  *       - in: query
  *         name: status
  *         schema: { type: string, enum: [pending, processing, succeeded, failed, cancelled, refunded] }
+ *       - in: query
+ *         name: page
+ *         schema: { type: integer, minimum: 1, default: 1 }
+ *       - in: query
+ *         name: limit
+ *         schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
  *     responses:
  *       200:
- *         description: List of payments
+ *         description: Paginated list of payments
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Payment'
+ *               type: object
+ *               properties:
+ *                 data:  { type: array, items: { $ref: '#/components/schemas/Payment' } }
+ *                 total: { type: integer }
+ *                 page:  { type: integer }
+ *                 limit: { type: integer }
  */
 
 /**
@@ -142,7 +151,10 @@ const proxyForward = (req, res, next) => {
  * /api/payments/{id}/refund:
  *   post:
  *     tags: [Payments]
- *     summary: Issue a full refund (Principal only)
+ *     summary: Issue a full or partial refund (Principal only)
+ *     description: |
+ *       Omit `amount` for a full refund (order cancelled, stock restored).
+ *       Provide `amount` less than the payment total for a partial refund (order stays active).
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -159,7 +171,7 @@ const proxyForward = (req, res, next) => {
  *       200:
  *         description: Refund issued
  *       422:
- *         description: Payment not in succeeded status
+ *         description: Payment not in succeeded status, or amount exceeds total
  */
 router.use('/api/payments', authenticate, authorize, jsonParser, proxyForward);
 

@@ -215,12 +215,13 @@ const options = {
             id:                    { type: 'string', format: 'uuid' },
             orderId:               { type: 'string', format: 'uuid' },
             stripePaymentIntentId: { type: 'string', example: 'pi_3OxTnZ2eZvKYlo2C1PBpABCD' },
-            stripeClientSecret:    { type: 'string', description: 'Pass to Stripe.js to confirm the payment on the client' },
+            stripeClientSecret:    { type: 'string', description: 'Only present while status is pending. Pass to Stripe.js to confirm the payment on the client.' },
             amount:                { type: 'number', format: 'float', example: 59.98 },
             currency:              { type: 'string', example: 'eur' },
             status:                { type: 'string', enum: ['pending', 'processing', 'succeeded', 'failed', 'cancelled', 'refunded'] },
             failureReason:         { type: 'string', nullable: true },
-            refundId:              { type: 'string', nullable: true },
+            refundId:              { type: 'string', nullable: true, description: 'Stripe refund ID — present after any refund (full or partial)' },
+            refundReason:          { type: 'string', nullable: true },
             paidAt:                { type: 'string', format: 'date-time', nullable: true },
             failedAt:              { type: 'string', format: 'date-time', nullable: true },
             refundedAt:            { type: 'string', format: 'date-time', nullable: true },
@@ -232,6 +233,12 @@ const options = {
           type: 'object',
           properties: {
             reason: { type: 'string', enum: ['duplicate', 'fraudulent', 'requested_by_customer'] },
+            amount: {
+              type: 'number',
+              format: 'float',
+              example: 15.00,
+              description: 'Partial refund amount in the payment currency. Omit for a full refund.',
+            },
           },
         },
         // ── Common ────────────────────────────────────────────────────────
