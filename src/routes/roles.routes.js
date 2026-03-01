@@ -12,7 +12,31 @@ router.use(authenticate, authorize);
 // Parse JSON only for gateway-local role routes
 router.use(require('express').json());
 
-// GET /api/roles — List all roles
+/**
+ * @swagger
+ * tags:
+ *   name: Roles
+ *   description: Role management — gateway-local, Principal only
+ */
+
+/**
+ * @swagger
+ * /api/roles:
+ *   get:
+ *     tags: [Roles]
+ *     summary: List all available roles
+ *     responses:
+ *       200:
+ *         description: List of roles
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Role'
+ *       403:
+ *         description: Forbidden — Principal role required
+ */
 router.get('/', async (req, res, next) => {
   try {
     const roles = await prisma.role.findMany({
@@ -24,7 +48,35 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-// GET /api/roles/users/:userId — Get roles for a specific user
+/**
+ * @swagger
+ * /api/roles/users/{userId}:
+ *   get:
+ *     tags: [Roles]
+ *     summary: Get all roles assigned to a user
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: Roles assigned to the user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 allOf:
+ *                   - $ref: '#/components/schemas/Role'
+ *                   - type: object
+ *                     properties:
+ *                       assignedAt: { type: string, format: date-time }
+ *       403:
+ *         description: Forbidden — Principal role required
+ */
 router.get('/users/:userId', async (req, res, next) => {
   try {
     const { userId } = req.params;
@@ -47,7 +99,42 @@ router.get('/users/:userId', async (req, res, next) => {
   }
 });
 
-// POST /api/roles/assign — Assign a role to a user
+/**
+ * @swagger
+ * /api/roles/assign:
+ *   post:
+ *     tags: [Roles]
+ *     summary: Assign a role to a user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [userId, roleName]
+ *             properties:
+ *               userId:   { type: string, format: uuid }
+ *               roleName: { type: string, enum: [Principal, Tenant, User] }
+ *     responses:
+ *       201:
+ *         description: Role assigned successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:  { type: string }
+ *                 userId:   { type: string, format: uuid }
+ *                 roleName: { type: string }
+ *       400:
+ *         description: Missing required fields
+ *       404:
+ *         description: User or role not found
+ *       409:
+ *         description: User already has this role
+ *       403:
+ *         description: Forbidden — Principal role required
+ */
 router.post('/assign', async (req, res, next) => {
   try {
     const { userId, roleName } = req.body;
@@ -93,7 +180,30 @@ router.post('/assign', async (req, res, next) => {
   }
 });
 
-// POST /api/roles/revoke — Revoke a role from a user
+/**
+ * @swagger
+ * /api/roles/revoke:
+ *   post:
+ *     tags: [Roles]
+ *     summary: Revoke a role from a user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [userId, roleName]
+ *             properties:
+ *               userId:   { type: string, format: uuid }
+ *               roleName: { type: string, enum: [Principal, Tenant, User] }
+ *     responses:
+ *       200:
+ *         description: Role revoked successfully
+ *       404:
+ *         description: User does not have this role
+ *       403:
+ *         description: Forbidden — Principal role required
+ */
 router.post('/revoke', async (req, res, next) => {
   try {
     const { userId, roleName } = req.body;
