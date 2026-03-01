@@ -49,8 +49,17 @@ const countryScope = (req, res, next) => {
       return next();
     }
 
+    // Build the canonical resource URL: strip any trailing non-UUID action
+    // e.g. /api/country-products/:id/stock → /api/country-products/:id
+    const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    const segments = fullPath.split('/').filter(Boolean);
+    const uuidIdx = segments.findIndex((s) => uuidPattern.test(s));
+    const resourcePath = uuidIdx >= 0
+      ? '/' + segments.slice(0, uuidIdx + 1).join('/')
+      : fullPath;
+
     // Fetch from product service to verify country ownership
-    const url = `${config.productServiceUrl}${fullPath}`;
+    const url = `${config.productServiceUrl}${resourcePath}`;
     fetch(url, {
       method: 'GET',
       headers: {
@@ -94,11 +103,12 @@ const countryScope = (req, res, next) => {
 };
 
 const extractResourceId = (path) => {
-  const segments = path.split('/').filter(Boolean);
-  const lastSegment = segments[segments.length - 1];
-  // UUID pattern check
-  if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(lastSegment)) {
-    return lastSegment;
+  const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  // Search all segments so paths like /:id/stock still resolve the UUID
+  for (const segment of path.split('/').filter(Boolean)) {
+    if (uuidPattern.test(segment)) {
+      return segment;
+    }
   }
   return null;
 };
