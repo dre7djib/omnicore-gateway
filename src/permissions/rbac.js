@@ -35,6 +35,36 @@ const permissions = [
   { method: 'PATCH',  pattern: /^\/api\/country-products\/[^/]+\/stock$/,   roles: ['Principal', 'Tenant'], countryScoped: true },
   { method: 'DELETE', pattern: /^\/api\/country-products\/[^/]+$/,          roles: ['Principal', 'Tenant'], countryScoped: true },
 
+  // ── Users ──────────────────────────────────────────────────
+  { method: 'POST',   pattern: /^\/api\/users\/?$/,                    roles: ['Principal'],                 countryScoped: false },
+  { method: 'GET',    pattern: /^\/api\/users(\/.*)?$/,                roles: ['Principal', 'Tenant'],       countryScoped: false },
+  { method: 'PUT',    pattern: /^\/api\/users\/[^/]+$/,                roles: ['Principal'],                 countryScoped: false },
+  { method: 'DELETE', pattern: /^\/api\/users\/[^/]+$/,                roles: ['Principal'],                 countryScoped: false },
+
+  // ── User Roles ─────────────────────────────────────────────
+  { method: 'POST',   pattern: /^\/api\/user-roles\/?$/,               roles: ['Principal'],                 countryScoped: false },
+  { method: 'GET',    pattern: /^\/api\/user-roles(\/.*)?$/,           roles: ['Principal'],                 countryScoped: false },
+  { method: 'PUT',    pattern: /^\/api\/user-roles\/[^/]+$/,           roles: ['Principal'],                 countryScoped: false },
+  { method: 'DELETE', pattern: /^\/api\/user-roles\/[^/]+$/,           roles: ['Principal'],                 countryScoped: false },
+
+  // ── User Addresses ─────────────────────────────────────────
+  { method: 'POST',   pattern: /^\/api\/user-addresses\/?$/,           roles: ['Principal', 'Tenant', 'User'], countryScoped: false },
+  { method: 'GET',    pattern: /^\/api\/user-addresses(\/.*)?$/,       roles: ['Principal', 'Tenant', 'User'], countryScoped: false },
+  { method: 'PUT',    pattern: /^\/api\/user-addresses\/[^/]+$/,       roles: ['Principal', 'Tenant', 'User'], countryScoped: false },
+  { method: 'DELETE', pattern: /^\/api\/user-addresses\/[^/]+$/,       roles: ['Principal', 'Tenant', 'User'], countryScoped: false },
+
+  // ── User Preferences ───────────────────────────────────────
+  { method: 'POST',   pattern: /^\/api\/user-preferences\/?$/,         roles: ['Principal', 'Tenant', 'User'], countryScoped: false },
+  { method: 'GET',    pattern: /^\/api\/user-preferences(\/.*)?$/,     roles: ['Principal', 'Tenant', 'User'], countryScoped: false },
+  { method: 'PUT',    pattern: /^\/api\/user-preferences\/[^/]+$/,     roles: ['Principal', 'Tenant', 'User'], countryScoped: false },
+  { method: 'DELETE', pattern: /^\/api\/user-preferences\/[^/]+$/,     roles: ['Principal', 'Tenant', 'User'], countryScoped: false },
+
+  // ── User Audit Logs ────────────────────────────────────────
+  { method: 'POST',   pattern: /^\/api\/user-audit-logs\/?$/,          roles: ['Principal'],                 countryScoped: false },
+  { method: 'GET',    pattern: /^\/api\/user-audit-logs(\/.*)?$/,      roles: ['Principal'],                 countryScoped: false },
+  { method: 'PUT',    pattern: /^\/api\/user-audit-logs\/[^/]+$/,      roles: ['Principal'],                 countryScoped: false },
+  { method: 'DELETE', pattern: /^\/api\/user-audit-logs\/[^/]+$/,      roles: ['Principal'],                 countryScoped: false },
+
   // ── Roles (gateway-local) ─────────────────────────────────
   { method: 'GET',    pattern: /^\/api\/roles\/?$/,               roles: ['Principal'],                 countryScoped: false },
   { method: 'GET',    pattern: /^\/api\/roles\/users\/[^/]+$/,    roles: ['Principal'],                 countryScoped: false },

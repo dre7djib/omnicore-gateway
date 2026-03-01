@@ -16,9 +16,9 @@ const userProxy = createProxyMiddleware({
   },
 });
 
-// Restore req.url to the full originalUrl before handing off to the proxy
+// Strip /api prefix so the user service (which mounts at /users, /user-roles, etc.) resolves correctly.
 const proxyForward = (req, res, next) => {
-  req.url = req.originalUrl;
+  req.url = req.originalUrl.replace(/^\/api/, '');
   userProxy(req, res, next);
 };
 
