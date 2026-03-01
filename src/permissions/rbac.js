@@ -30,9 +30,10 @@ const permissions = [
   // ── Country Products (stock/pricing) ───────────────────────
   { method: 'POST',   pattern: /^\/api\/country-products\/?$/,         roles: ['Principal', 'Tenant'], countryScoped: true },
   { method: 'GET',    pattern: /^\/api\/country-products(\/.*)?$/,     roles: ['Principal', 'Tenant', 'User'], countryScoped: false },
-  { method: 'PUT',    pattern: /^\/api\/country-products\/[^/]+$/,     roles: ['Principal', 'Tenant'], countryScoped: true },
-  { method: 'PATCH',  pattern: /^\/api\/country-products\/[^/]+$/,     roles: ['Principal', 'Tenant'], countryScoped: true },
-  { method: 'DELETE', pattern: /^\/api\/country-products\/[^/]+$/,     roles: ['Principal', 'Tenant'], countryScoped: true },
+  { method: 'PUT',    pattern: /^\/api\/country-products\/[^/]+$/,          roles: ['Principal', 'Tenant'], countryScoped: true },
+  { method: 'PATCH',  pattern: /^\/api\/country-products\/[^/]+$/,          roles: ['Principal', 'Tenant'], countryScoped: true },
+  { method: 'PATCH',  pattern: /^\/api\/country-products\/[^/]+\/stock$/,   roles: ['Principal', 'Tenant'], countryScoped: true },
+  { method: 'DELETE', pattern: /^\/api\/country-products\/[^/]+$/,          roles: ['Principal', 'Tenant'], countryScoped: true },
 
   // ── Roles (gateway-local) ─────────────────────────────────
   { method: 'GET',    pattern: /^\/api\/roles\/?$/,               roles: ['Principal'],                 countryScoped: false },
