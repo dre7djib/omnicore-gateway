@@ -18,14 +18,17 @@ const permissions = [
 
   // ── Products ───────────────────────────────────────────────
   { method: 'POST',   pattern: /^\/api\/products\/?$/,           roles: ['Principal', 'Tenant'],       countryScoped: false },
+  { method: 'POST',   pattern: /^\/api\/products\/upload\/?$/,   roles: ['Principal', 'Tenant'],       countryScoped: false },
   { method: 'GET',    pattern: /^\/api\/products(\/.*)?$/,       roles: ['Principal', 'Tenant', 'User'], countryScoped: false },
   { method: 'PUT',    pattern: /^\/api\/products\/[^/]+$/,       roles: ['Principal', 'Tenant'],       countryScoped: false },
   { method: 'PATCH',  pattern: /^\/api\/products\/[^/]+$/,       roles: ['Principal', 'Tenant'],       countryScoped: false },
   { method: 'DELETE', pattern: /^\/api\/products\/[^/]+$/,       roles: ['Principal'],                 countryScoped: false },
 
   // ── Product Images ─────────────────────────────────────────
-  { method: 'POST',   pattern: /^\/api\/products\/[^/]+\/images\/?$/, roles: ['Principal', 'Tenant'], countryScoped: false },
-  { method: 'DELETE', pattern: /^\/api\/products\/[^/]+\/images\/[^/]+$/, roles: ['Principal'],        countryScoped: false },
+  { method: 'POST',   pattern: /^\/api\/products\/[^/]+\/images\/?$/,             roles: ['Principal', 'Tenant'], countryScoped: false },
+  { method: 'POST',   pattern: /^\/api\/products\/[^/]+\/images\/upload\/?$/,    roles: ['Principal', 'Tenant'], countryScoped: false },
+  { method: 'PUT',    pattern: /^\/api\/products\/[^/]+\/images\/[^/]+\/primary$/, roles: ['Principal', 'Tenant'], countryScoped: false },
+  { method: 'DELETE', pattern: /^\/api\/products\/images\/[^/]+$/,                roles: ['Principal'],           countryScoped: false },
 
   // ── Country Products (stock/pricing) ───────────────────────
   { method: 'POST',   pattern: /^\/api\/country-products\/?$/,         roles: ['Principal', 'Tenant'], countryScoped: true },
