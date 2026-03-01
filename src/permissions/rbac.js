@@ -74,6 +74,11 @@ const permissions = [
   { method: 'POST',   pattern: /^\/api\/roles\/assign\/?$/,       roles: ['Principal'],                 countryScoped: false },
   { method: 'POST',   pattern: /^\/api\/roles\/revoke\/?$/,       roles: ['Principal'],                 countryScoped: false },
 
+  // ── Payments ───────────────────────────────────────────────
+  { method: 'POST',   pattern: /^\/api\/payments\/intent\/?$/,        roles: ['Principal', 'Tenant', 'User'], countryScoped: false },
+  { method: 'GET',    pattern: /^\/api\/payments(\/.*)?$/,            roles: ['Principal', 'Tenant'],         countryScoped: false },
+  { method: 'POST',   pattern: /^\/api\/payments\/[^/]+\/refund\/?$/, roles: ['Principal'],                   countryScoped: false },
+
   // ── Orders ─────────────────────────────────────────────────
   { method: 'POST',   pattern: /^\/api\/orders\/?$/,                roles: ['Principal', 'Tenant', 'User'], countryScoped: false },
   { method: 'GET',    pattern: /^\/api\/orders(\/.*)?$/,            roles: ['Principal', 'Tenant', 'User'], countryScoped: false },

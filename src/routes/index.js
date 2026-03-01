@@ -5,11 +5,16 @@ const productProxy = require('./product.proxy');
 const userProxy = require('./user.proxy');
 const rolesRoutes = require('./roles.routes');
 const orderProxy = require('./order.proxy');
+const paymentProxy = require('./payment.proxy');
+const webhookProxy = require('./webhook.proxy');
 
 const router = Router();
 
 // Health check — no auth
 router.use(healthRoutes);
+
+// Stripe webhooks — NO auth, raw body passthrough (must be before auth middleware)
+router.use(webhookProxy);
 
 // Auth proxy — public signup/login/refresh, authenticated logout
 router.use(authProxy);
@@ -25,5 +30,8 @@ router.use(productProxy);
 
 // Order proxy — authenticated + authorized
 router.use(orderProxy);
+
+// Payment proxy — authenticated + authorized
+router.use(paymentProxy);
 
 module.exports = router;

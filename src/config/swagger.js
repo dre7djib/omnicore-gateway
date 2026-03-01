@@ -208,6 +208,32 @@ const options = {
             currency:         { type: 'string', example: 'EUR' },
           },
         },
+        // ── Payments ──────────────────────────────────────────────────────
+        Payment: {
+          type: 'object',
+          properties: {
+            id:                    { type: 'string', format: 'uuid' },
+            orderId:               { type: 'string', format: 'uuid' },
+            stripePaymentIntentId: { type: 'string', example: 'pi_3OxTnZ2eZvKYlo2C1PBpABCD' },
+            stripeClientSecret:    { type: 'string', description: 'Pass to Stripe.js to confirm the payment on the client' },
+            amount:                { type: 'number', format: 'float', example: 59.98 },
+            currency:              { type: 'string', example: 'eur' },
+            status:                { type: 'string', enum: ['pending', 'processing', 'succeeded', 'failed', 'cancelled', 'refunded'] },
+            failureReason:         { type: 'string', nullable: true },
+            refundId:              { type: 'string', nullable: true },
+            paidAt:                { type: 'string', format: 'date-time', nullable: true },
+            failedAt:              { type: 'string', format: 'date-time', nullable: true },
+            refundedAt:            { type: 'string', format: 'date-time', nullable: true },
+            createdAt:             { type: 'string', format: 'date-time' },
+            updatedAt:             { type: 'string', format: 'date-time' },
+          },
+        },
+        RefundInput: {
+          type: 'object',
+          properties: {
+            reason: { type: 'string', enum: ['duplicate', 'fraudulent', 'requested_by_customer'] },
+          },
+        },
         // ── Common ────────────────────────────────────────────────────────
         Error: {
           type: 'object',

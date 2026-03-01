@@ -8,5 +8,6 @@ module.exports = {
   authServiceUrl: process.env.AUTH_SERVICE_URL || 'http://localhost:3003',
   productServiceUrl: process.env.PRODUCT_SERVICE_URL || 'http://localhost:3001',
   userServiceUrl: process.env.USER_SERVICE_URL || 'http://localhost:3002',
-  orderServiceUrl: process.env.ORDER_SERVICE_URL || 'http://localhost:3004',
+  orderServiceUrl:   process.env.ORDER_SERVICE_URL   || 'http://localhost:3004',
+  paymentServiceUrl: process.env.PAYMENT_SERVICE_URL || 'http://localhost:3005',
 };
