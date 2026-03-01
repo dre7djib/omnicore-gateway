@@ -12,7 +12,13 @@ const orderProxy = createProxyMiddleware({
   target: config.orderServiceUrl,
   changeOrigin: true,
   on: {
-    proxyReq: fixRequestBody,
+    proxyReq: (proxyReq, req) => {
+      // Forward authenticated user ID so the order service doesn't need to re-verify the JWT
+      if (req.user && req.user.id) {
+        proxyReq.setHeader('X-User-Id', req.user.id);
+      }
+      fixRequestBody(proxyReq, req);
+    },
   },
 });
 
@@ -44,9 +50,8 @@ const proxyForward = (req, res, next) => {
  *         application/json:
  *           schema:
  *             type: object
- *             required: [userId, countryId, items]
+ *             required: [countryId, items]
  *             properties:
- *               userId:    { type: string, format: uuid }
  *               countryId: { type: string, format: uuid }
  *               items:
  *                 type: array
