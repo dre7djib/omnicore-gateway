@@ -26,6 +26,10 @@ RUN cd omnicore-db && npx prisma generate
 
 # Prune devDependencies for a lean production image
 RUN npm prune --omit=dev
+# Remove workspace-local node_modules — all production deps are hoisted to root node_modules.
+# These workspace dirs only hold devDeps (jest, @types/*, eslint, babel) that npm prune
+# does not always clean from nested workspace-specific node_modules directories.
+RUN rm -rf omnicore-gateway/node_modules
 
 # ── Runner ────────────────────────────────────────────────────────────────────
 FROM node:22-alpine3.21
@@ -42,9 +46,6 @@ RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
 
 # Pruned node_modules (workspace symlinks resolved to real directories by Docker COPY)
 COPY --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
-
-# Per-service node_modules (packages npm did not hoist to root in workspace layout)
-COPY --from=builder --chown=nodejs:nodejs /app/omnicore-gateway/node_modules ./omnicore-gateway/node_modules
 
 # Shared DB package (needed to resolve node_modules/@omnicore/db symlink → ../../omnicore-db)
 COPY --chown=nodejs:nodejs omnicore-db/ ./omnicore-db/
