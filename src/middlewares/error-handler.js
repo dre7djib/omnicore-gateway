@@ -15,10 +15,14 @@ const errorHandler = (err, req, res, _next) => {
     'Unhandled application error',
   );
 
-  res.status(err.status || 500).json({
+  const status = err.status || 500;
+  const code = err.code || (status === 500 ? 'INTERNAL_ERROR' : 'REQUEST_ERROR');
+
+  res.status(status).json({
     error: {
-      message: err.message || 'Internal Server Error',
-      status: err.status || 500,
+      code,
+      message: status === 500 ? 'Internal Server Error' : (err.message || 'Internal Server Error'),
+      status,
       correlationId,
     },
   });
