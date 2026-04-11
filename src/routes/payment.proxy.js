@@ -12,6 +12,10 @@ const paymentProxy = createProxyMiddleware({
   changeOrigin: true,
   on: {
     proxyReq: (proxyReq, req) => {
+      proxyReq.removeHeader('X-Internal-Service-Token');
+      if (config.internalServiceToken) {
+        proxyReq.setHeader('X-Internal-Service-Token', config.internalServiceToken);
+      }
       // Forward authenticated user ID to payment service
       if (req.user && req.user.id) {
         proxyReq.setHeader('X-User-Id', req.user.id);

@@ -13,6 +13,10 @@ const orderProxy = createProxyMiddleware({
   changeOrigin: true,
   on: {
     proxyReq: (proxyReq, req) => {
+      proxyReq.removeHeader('X-Internal-Service-Token');
+      if (config.internalServiceToken) {
+        proxyReq.setHeader('X-Internal-Service-Token', config.internalServiceToken);
+      }
       // Forward authenticated user ID so the order service doesn't need to re-verify the JWT
       if (req.user && req.user.id) {
         proxyReq.setHeader('X-User-Id', req.user.id);

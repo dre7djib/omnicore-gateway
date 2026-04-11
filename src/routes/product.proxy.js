@@ -13,7 +13,14 @@ const productProxy = createProxyMiddleware({
   target: config.productServiceUrl,
   changeOrigin: true,
   on: {
-    proxyReq: fixRequestBody,
+    proxyReq: (proxyReq, req, res) => {
+      // Strip any client-supplied token to prevent bypass, then inject the real one
+      proxyReq.removeHeader('X-Internal-Service-Token');
+      if (config.internalServiceToken) {
+        proxyReq.setHeader('X-Internal-Service-Token', config.internalServiceToken);
+      }
+      fixRequestBody(proxyReq, req, res);
+    },
   },
 });
 

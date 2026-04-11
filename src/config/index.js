@@ -5,6 +5,7 @@ module.exports = {
   nodeEnv: process.env.NODE_ENV || 'development',
   databaseUrl: process.env.DATABASE_URL,
   jwtSecret: process.env.JWT_SECRET,
+  internalServiceToken: process.env.INTERNAL_SERVICE_TOKEN,
   authServiceUrl: process.env.AUTH_SERVICE_URL || 'http://localhost:3003',
   productServiceUrl: process.env.PRODUCT_SERVICE_URL || 'http://localhost:3001',
   userServiceUrl: process.env.USER_SERVICE_URL || 'http://localhost:3002',
